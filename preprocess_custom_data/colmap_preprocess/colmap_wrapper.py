@@ -32,16 +32,16 @@ def run_colmap(basedir, match_type):
             '--ImageReader.single_camera', '1',
             # '--SiftExtraction.use_gpu', '0',
     ]
-    # colmap feature_extractor --database_path {} --image_path {} --ImageReader.single_camera 1'.format(os.path.join(basedir, 'database.db'), os.path.join(basedir, 'images'))
+    # colmap feature_extractor --database_path ./data/datasets/yonwoo/database.db --image_path ./data/datasets/yonwoo/images --ImageReader.single_camera 1'.format(os.path.join(basedir, 'database.db'), os.path.join(basedir, 'images'))
     feat_output = ( subprocess.check_output(feature_extractor_args, universal_newlines=True) )
     logfile.write(feat_output)
     print('Features extracted')
 
     exhaustive_matcher_args = [
-        'docker', 'exec', 'neus', 'colmap', match_type, 
+        'colmap', match_type, 
             '--database_path', os.path.join(basedir, 'database.db'), 
     ]
-
+    # colmap exhaustive_matcher --database_path ./data/datasets/yonwoo/database.db
     match_output = ( subprocess.check_output(exhaustive_matcher_args, universal_newlines=True) )
     logfile.write(match_output)
     print('Features matched')
@@ -59,7 +59,7 @@ def run_colmap(basedir, match_type):
     #         '--Mapper.init_min_tri_angle', '4',
     # ]
     mapper_args = [
-        'docker', 'exec', 'neus', 'colmap', 'mapper',
+        'colmap', 'mapper',
             '--database_path', os.path.join(basedir, 'database.db'),
             '--image_path', os.path.join(basedir, 'images'),
             '--output_path', os.path.join(basedir, 'sparse'), # --export_path changed to --output_path in colmap 3.6
@@ -68,7 +68,7 @@ def run_colmap(basedir, match_type):
             '--Mapper.multiple_models', '0',
             '--Mapper.extract_colors', '0',
     ]
-
+    # colmap mapper --database_path ./data/datasets/yonwoo/database.db --image_path ./data/datasets/yonwoo/images --output_path ./data/datasets/yonwoo/sparse --Mapper.num_threads 16 --Mapper.init_min_tri_angle 4 --Mapper.multiple_models 0 --Mapper.extract_colors 0
     map_output = ( subprocess.check_output(mapper_args, universal_newlines=True) )
     logfile.write(map_output)
     logfile.close()

@@ -15,7 +15,8 @@ from pyhocon import ConfigFactory
 from models.dataset import Dataset
 from models.fields import RenderingNetwork, SDFNetwork, SingleVarianceNetwork, NeRF
 from models.renderer import NeuSRenderer
-
+import warnings
+warnings.filterwarnings("ignore")
 
 class Runner:
     def __init__(self, conf_path, mode='train', case='CASE_NAME', is_continue=False):
@@ -99,7 +100,7 @@ class Runner:
         self.writer = SummaryWriter(log_dir=os.path.join(self.base_exp_dir, 'logs'))
         self.update_learning_rate()
         res_step = self.end_iter - self.iter_step
-        image_perm = self.get_image_perm()
+        image_perm = self.get_image_perm().to(self.device)
 
         for iter_i in tqdm(range(res_step)):
             data = self.dataset.gen_random_rays_at(image_perm[self.iter_step % len(image_perm)], self.batch_size)
