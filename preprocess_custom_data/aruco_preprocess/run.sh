@@ -1,6 +1,6 @@
 calib_bin=./build/calibration
-work_dir=../example/thin_rope
-n_images=32
+work_dir=/home/hyunsoocha/GitHub/NeuS/data/datasets/yonwoo/images
+n_images=80
 
 # Define the region of interest (ROI).
 # We assume the center of the ROI is the center of the calibration board.
